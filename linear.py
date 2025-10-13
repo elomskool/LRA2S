@@ -1,30 +1,48 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def linear_regression(x, y):
+def normalize(array:list):
+    #noramalize with std method (standardization)
+    arr = np.array(array)
+    return (array - np.mean(arr))/np.std(arr)
 
-    #dimensional check on the input received
 
-    if len(x) != len(y):
-        raise ValueError
-    else:
-        n = len(x)
-        x = np.array(x)
-        y = np.array(y)
-        pass
+def linregression_lr(xline: list, yline: list, epochs: int = 100, lr: float = 0.0001):
 
-    #summatory to find the bias
+    #initialize the var
+    n = len(xline)
+    m = 0
+    c = 0
+    qcheck: list = []
+    ccheck: list = []
+    mcheck: list = []
+    #need to convert 2 np array
+    arrX = np.array(xline)
+    arrY = np.array(yline)
 
-    sx = sum(x)
-    sy = sum(y)
-    sxx = sum(i**2 for i in range(n) )
-    syy = sum(x[i]*y[i] for i in range(n) )
+    #normalize the arrays
+    normX = normalize(arrX)
+    normY = normalize(arrY)
 
-    #coeff and bias, see theory in readme.rm
+    #i personally use a training cicle
+    for i in range(epochs):
+        #prediction of the y
+        yp = (m*normX + c)
+        #dm/dy, dc/dy are the gradient
+        dm = (-2/n) * sum(normX * (normY - yp))
+        dc = (-2/n) * sum(normY - yp)
+        #updating the parameters
+        m = m - lr * dm
+        c = c - lr * dc
+        #quadratic error checking
 
-    if (n*sxx)-(sxx**2) != 0:
+        mse = np.mean((normY- yp) ** 2)
+        qcheck.append(mse)
+        ccheck.append(c)
+        mcheck.append(m)
 
-        m = ((n * sxy)-(sx*sy))/((n*sxx)-(sxx**2))
-        c = (sy-sx * m)/n
+        if i % 100 == 0:
+            print(f"ep n -> {i}: medium sqsuare error -> {mse:.6f}")
 
-    return m, c
+
+    return m, c, qcheck, ccheck, mcheck
