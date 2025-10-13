@@ -6,7 +6,7 @@ import os
 
 def main() -> None:
 
-    data = pd.read_csv('datasource/data.csv',  usecols = ['depth', 'distance'])
+    data = pd.read_csv('../datasource/data.csv',  usecols = ['depth', 'distance'])
 
     x = data['depth'].to_numpy()
     y = data['distance'].to_numpy()
@@ -73,4 +73,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
